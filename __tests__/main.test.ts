@@ -7,56 +7,73 @@
  */
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
-import { wait } from '../__fixtures__/wait.js'
+
+import { WiremockAdmin } from '../src/wiremock-admin.js'
+
+import fs from 'fs'
 
 // Mocks should be declared before the module being tested is imported.
 jest.unstable_mockModule('@actions/core', () => core)
-jest.unstable_mockModule('../src/wait.js', () => ({ wait }))
+
+const mockreaddirSync = jest.spyOn(fs, 'readdirSync')
+const mockreadFileSync = jest.spyOn(fs, 'readFileSync')
+
+const getMappingsSpy = jest.spyOn(WiremockAdmin.prototype, 'getMappings')
+const postMappingsSpy = jest.spyOn(WiremockAdmin.prototype, 'postMappings')
 
 // The module being tested should be imported dynamically. This ensures that the
 // mocks are used in place of any actual dependencies.
 const { run } = await import('../src/main.js')
 
 describe('main.ts', () => {
-  beforeEach(() => {
-    // Set the action's inputs as return values from core.getInput().
-    core.getInput.mockImplementation(() => '500')
-
-    // Mock the wait function so that it does not actually wait.
-    wait.mockImplementation(() => Promise.resolve('done!'))
-  })
-
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it('Sets the time output', async () => {
+  it('Runs without throwing an error', async () => {
+    core.getInput.mockImplementation((name: string) => {
+      return name === 'port' ? '4444' : '/path/to/mappings'
+    })
+
+    mockreaddirSync.mockReturnValueOnce([
+      { name: 'mapping1.json', isFile: () => true, isDirectory: () => false },
+      { name: 'mapping2.json', isFile: () => true, isDirectory: () => false },
+      { name: 'subdir', isFile: () => false, isDirectory: () => true }
+    ] as fs.Dirent[])
+
+    mockreadFileSync.mockReturnValue('{}')
+
+    const mockGetMappings = jest.fn(() => Promise.resolve([]))
+    const mockPostMappings = jest.fn(() => Promise.resolve())
+
+    getMappingsSpy.mockImplementation(mockGetMappings)
+    postMappingsSpy.mockImplementation(mockPostMappings)
+
     await run()
 
-    // Verify the time output was set.
-    expect(core.setOutput).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      // Simple regex to match a time string in the format HH:MM:SS.
-      expect.stringMatching(/^\d{2}:\d{2}:\d{2}/)
-    )
+    expect(core.getInput).toHaveBeenCalledWith('mappings', { required: true })
+    expect(core.getInput).toHaveBeenCalledWith('port')
+
+    expect(core.setFailed).not.toHaveBeenCalled()
+
+    expect(mockGetMappings).toHaveBeenCalledTimes(2)
+    expect(mockPostMappings).toHaveBeenCalledTimes(2)
   })
 
-  it('Sets a failed status', async () => {
-    // Clear the getInput mock and return an invalid value.
-    core.getInput.mockClear().mockReturnValueOnce('this is not a number')
-
-    // Clear the wait mock and return a rejected promise.
-    wait
-      .mockClear()
-      .mockRejectedValueOnce(new Error('milliseconds is not a number'))
+  it('Sets a failed status with invalid port value', async () => {
+    core.getInput.mockImplementation((name: string) => {
+      return name === 'port' ? 'this is not a number' : ''
+    })
 
     await run()
 
+    expect(core.getInput).toHaveBeenCalledWith('mappings', { required: true })
+    expect(core.getInput).toHaveBeenCalledWith('port')
+
     // Verify that the action was marked as failed.
-    expect(core.setFailed).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds is not a number'
+    expect(core.setFailed).toHaveBeenCalledTimes(1)
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'Failed to parse integer from value: this is not a number'
     )
   })
 })

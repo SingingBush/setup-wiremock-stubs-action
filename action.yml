@@ -1,16 +1,23 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: Setup Wiremock Stubs
+description:
+  Posts Wiremock stubs to a Wiremock server running in a container. This action
+  is intended to be used in conjunction with wiremock running as a GH service
+author: singingbush
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
+# See https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax#branding
 branding:
-  icon: heart
-  color: red
+  icon: command
+  color: gray-dark
 
 # Define your inputs here.
 inputs:
+  hostname:
+    description: The host name for your Wiremock server. (defaults to localhost)
+    required: true
+    default: 'localhost'
   milliseconds:
-    description: Your input description here
+    description: The number of milliseconds to wait before timing out.
     required: true
     default: '1000'
 
@@ -21,4 +28,7 @@ outputs:
 
 runs:
   using: node24
+  # pre: 'dist/setup.js'
   main: dist/index.js
+  # post: 'dist/cache-save/index.js'
+  # post-if: success()
