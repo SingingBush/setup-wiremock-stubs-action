@@ -23,7 +23,7 @@ export async function run(): Promise<void> {
       required: true
     })
     const wiremock_host: string = core.getInput('hostname') || 'localhost'
-    const wiremock_port: string = core.getInput('port') || '8080' // todoL should we check for WIREMOCK_PORT env variable?
+    const wiremock_port: string = core.getInput('port') || '8080' // todo: should we check for WIREMOCK_PORT env variable?
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     core.debug(

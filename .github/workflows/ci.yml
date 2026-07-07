@@ -63,7 +63,7 @@ jobs:
         uses: ./
         with:
           hostname: localhost
-          port: ${{ job.services.wiremock.ports[8080] }}
+          port: ${{ job.services.wiremock.ports['8080'] }}
           mappings: ${{ github.workspace }}/test-stubs
 
       - name: Print Output
