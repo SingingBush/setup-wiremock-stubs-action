@@ -16,14 +16,17 @@ inputs:
     description: The host name for your Wiremock server. (defaults to localhost)
     required: true
     default: 'localhost'
-  milliseconds:
-    description: The number of milliseconds to wait before timing out.
+  port:
+    description: The port number for your Wiremock server. (defaults to 8080)
     required: true
-    default: '1000'
+    default: '8080'
+  mappings:
+    description: The path to the directory containing your Wiremock mappings.
+    required: true
 
 # Define your outputs here.
 outputs:
-  time:
+  count:
     description: Your output description here
 
 runs:
