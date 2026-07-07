@@ -89,6 +89,7 @@ export async function run(): Promise<void> {
         core.info(
           `Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`
         )
+        core.setOutput('count', mappings.length)
       })
       .catch((error) => {
         core.setFailed(`Failed to retrieve mappings: ${error.message}`)

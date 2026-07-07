@@ -8,7 +8,7 @@
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
 
-import { WiremockAdmin } from '../src/wiremock-admin.js'
+import { WiremockAdmin, WmMapping } from '../src/wiremock-admin.js'
 
 import fs from 'fs'
 
@@ -43,7 +43,11 @@ describe('main.ts', () => {
 
     mockreadFileSync.mockReturnValue('{}')
 
-    const mockGetMappings = jest.fn(() => Promise.resolve([]))
+    const mockGetMappings = jest
+      .fn()
+      .mockReturnValueOnce(Promise.resolve([] as WmMapping[]))
+      .mockReturnValueOnce(Promise.resolve([{}, {}] as WmMapping[]))
+
     const mockPostMappings = jest.fn(() => Promise.resolve())
 
     getMappingsSpy.mockImplementation(mockGetMappings)
@@ -58,6 +62,8 @@ describe('main.ts', () => {
 
     expect(mockGetMappings).toHaveBeenCalledTimes(2)
     expect(mockPostMappings).toHaveBeenCalledTimes(2)
+
+    expect(core.setOutput).toHaveBeenCalledWith('count', 2)
   })
 
   it('Sets a failed status with invalid port value', async () => {
