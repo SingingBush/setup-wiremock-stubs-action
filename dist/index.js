@@ -29075,7 +29075,8 @@ async function run() {
             required: true
         });
         const wiremock_host = getInput('hostname') || 'localhost';
-        const wiremock_port = getInput('port') || '8080'; // todoL should we check for WIREMOCK_PORT env variable?
+        // todo: should we check for WIREMOCK_PORT env variable?
+        const wiremock_port = getInput('port') || '8080';
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         debug(`args: '${wiremock_mappings_dir}', wiremock port: ${wiremock_port}`);
         // Create a WiremockAdmin instance to interact with the Wiremock admin API
