@@ -29074,11 +29074,12 @@ async function run() {
         const wiremock_mappings_dir = getInput('mappings', {
             required: true
         });
-        const wiremock_port = getInput('port') || '8080';
+        const wiremock_host = getInput('hostname') || 'localhost';
+        const wiremock_port = getInput('port') || '8080'; // todoL should we check for WIREMOCK_PORT env variable?
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         debug(`args: '${wiremock_mappings_dir}', wiremock port: ${wiremock_port}`);
         // Create a WiremockAdmin instance to interact with the Wiremock admin API
-        const wiremockAdmin = new WiremockAdmin('localhost', parseIntOrError(wiremock_port));
+        const wiremockAdmin = new WiremockAdmin(wiremock_host, parseIntOrError(wiremock_port));
         // core.toPlatformPath(mappingsPath)
         //const wiremock_mappings_dir = path.join(cwd, "mappings");
         // const wiremockFilesPath = path.join(cwd, "__files");

@@ -62,6 +62,8 @@ jobs:
         id: test-action
         uses: ./
         with:
+          hostname: localhost
+          port: ${{ job.services.wiremock.ports[8080] }}
           mappings: ${{ github.workspace }}/test-stubs
 
       - name: Print Output

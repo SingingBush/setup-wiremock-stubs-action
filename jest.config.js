@@ -13,10 +13,10 @@ export default {
   // specified thresholds.
   coverageThreshold: {
     global: {
-      branches: 60,
-      functions: 70
-      // lines: 100,
-      // statements: 100
+      branches: 65,
+      functions: 70,
+      lines: 85,
+      statements: 85
     }
   },
   extensionsToTreatAsEsm: ['.ts'],
