@@ -27,9 +27,7 @@ export async function run(): Promise<void> {
     const wiremock_port: string = core.getInput('port') || '8080'
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(
-      `args: '${wiremock_mappings_dir}', wiremock port: ${wiremock_port}`
-    )
+    core.debug(`args: '${wiremock_mappings_dir}', wiremock port: ${wiremock_port}`)
 
     // Create a WiremockAdmin instance to interact with the Wiremock admin API
     const wiremockAdmin: WiremockAdmin = new WiremockAdmin(
@@ -48,9 +46,7 @@ export async function run(): Promise<void> {
     wiremockAdmin
       .getMappings()
       .then((mappings) => {
-        core.info(
-          `Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`
-        )
+        core.info(`Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`)
       })
       .catch((error) => {
         core.setFailed(`Failed to retrieve mappings: ${error.message}`)
@@ -62,13 +58,9 @@ export async function run(): Promise<void> {
           `Skipping directory ${file.name} in mappings path as recursively reading directories is not supported.`
         )
       } else if (path.extname(file.name) === '.json') {
-        const content = fs
-          .readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8')
-          .trim()
+        const content = fs.readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8').trim()
 
-        core.info(
-          `Posting ${path.join(wiremock_mappings_dir, file.name)} to Wiremock.`
-        )
+        core.info(`Posting ${path.join(wiremock_mappings_dir, file.name)} to Wiremock.`)
 
         wiremockAdmin
           .postMappings(JSON.parse(content))
@@ -78,9 +70,7 @@ export async function run(): Promise<void> {
             )
           })
           .catch((error) => {
-            core.setFailed(
-              `Failed to post mapping from file ${file.name}: ${error.message}`
-            )
+            core.setFailed(`Failed to post mapping from file ${file.name}: ${error.message}`)
           })
       }
     }
@@ -88,10 +78,9 @@ export async function run(): Promise<void> {
     wiremockAdmin
       .getMappings()
       .then((mappings) => {
-        core.info(
-          `Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`
-        )
-        core.setOutput('count', mappings.length)
+        core.info(`Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`)
+        core.setOutput('mappings', mappings)
+        core.setOutput('total', mappings.length)
       })
       .catch((error) => {
         core.setFailed(`Failed to retrieve mappings: ${error.message}`)

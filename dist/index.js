@@ -29224,9 +29224,7 @@ async function run() {
                 warning(`Skipping directory ${file.name} in mappings path as recursively reading directories is not supported.`);
             }
             else if (path.extname(file.name) === '.json') {
-                const content = fs__default
-                    .readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8')
-                    .trim();
+                const content = fs__default.readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8').trim();
                 info(`Posting ${path.join(wiremock_mappings_dir, file.name)} to Wiremock.`);
                 wiremockAdmin
                     .postMappings(JSON.parse(content))
@@ -29242,7 +29240,8 @@ async function run() {
             .getMappings()
             .then((mappings) => {
             info(`Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`);
-            setOutput('count', mappings.length);
+            setOutput('mappings', mappings);
+            setOutput('total', mappings.length);
         })
             .catch((error) => {
             setFailed(`Failed to retrieve mappings: ${error.message}`);

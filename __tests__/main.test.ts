@@ -46,7 +46,7 @@ describe('main.ts', () => {
     const mockGetMappings = jest
       .fn()
       .mockReturnValueOnce(Promise.resolve([] as WmMapping[]))
-      .mockReturnValueOnce(Promise.resolve([{}, {}] as WmMapping[]))
+      .mockReturnValueOnce(Promise.resolve([{ id: 'one' }, { id: 'two' }] as WmMapping[]))
 
     const mockPostMappings = jest.fn(() => Promise.resolve())
 
@@ -63,7 +63,9 @@ describe('main.ts', () => {
     expect(mockGetMappings).toHaveBeenCalledTimes(2)
     expect(mockPostMappings).toHaveBeenCalledTimes(2)
 
-    expect(core.setOutput).toHaveBeenCalledWith('count', 2)
+    expect(core.setOutput).toHaveBeenCalledTimes(2)
+    expect(core.setOutput).toHaveBeenCalledWith('mappings', [{ id: 'one' }, { id: 'two' }])
+    expect(core.setOutput).toHaveBeenCalledWith('total', 2)
   })
 
   it('Sets a failed status with invalid port value', async () => {

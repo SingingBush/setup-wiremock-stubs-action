@@ -68,6 +68,6 @@ jobs:
 
       - name: Print Output
         id: output
-        run:
-          echo "There are ${{ steps.test-action.outputs.count }} mappings in
-          Wiremock."
+        run: |
+          echo "There are ${{ steps.test-action.outputs.total }} mappings in Wiremock."
+          echo ${{ steps.test-action.outputs.mappings }}

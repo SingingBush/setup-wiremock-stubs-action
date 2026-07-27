@@ -1,7 +1,7 @@
 name: Setup Wiremock Stubs
-description:
-  Posts Wiremock stubs to a Wiremock server running in a container. This action
-  is intended to be used in conjunction with wiremock running as a GH service
+
+# description must be less than 125 characters
+description: Post Wiremock stubs to an already running Wiremock container running as a GH service
 author: singingbush
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
@@ -26,8 +26,10 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  count:
-    description: Your output description here
+  mappings:
+    description: array of mappings configured on the Wiremock server
+  total:
+    description: The amount of mappings that have been configured
 
 runs:
   using: node24

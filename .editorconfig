@@ -1,0 +1,22 @@
+root = true
+
+[*]
+# Non-configurable Prettier behaviors
+charset = utf-8
+
+# Caveat: Prettier won’t trim trailing whitespace inside template strings, but your editor might.
+trim_trailing_whitespace = true
+
+end_of_line = lf
+indent_style = space
+
+[*.{ts,yml,yaml}]
+# Max line length should be >= to the value set in .prettierrc.yml and .yaml-lint.yml
+max_line_length = 100
+indent_size = 2
+insert_final_newline = true
+
+[*.md]
+# Max line length should be >= to the value set in .markdown-lint.yml
+max_line_length = 120
+trim_trailing_whitespace = false

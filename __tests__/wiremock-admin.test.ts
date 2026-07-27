@@ -56,35 +56,26 @@ describe('WiremockAdmin', () => {
 
     expect(mappings).toEqual(expectedMappings)
 
-    expect(spyHttpClientGetJson).toHaveBeenCalledWith(
-      'http://localhost:8080/__admin/mappings',
-      {}
-    )
+    expect(spyHttpClientGetJson).toHaveBeenCalledWith('http://localhost:8080/__admin/mappings', {})
   })
 
-  it.each([401, 404, 500])(
-    'throws an exception on %s response',
-    async (statusCode: number) => {
-      spyHttpClientGetJson = jest.spyOn(HttpClient.prototype, 'getJson')
+  it.each([401, 404, 500])('throws an exception on %s response', async (statusCode: number) => {
+    spyHttpClientGetJson = jest.spyOn(HttpClient.prototype, 'getJson')
 
-      spyHttpClientGetJson.mockImplementation(
-        async (): Promise<ifm.TypedResponse<WmMappingsResponseBody>> => {
-          return {
-            statusCode: statusCode,
-            headers: {},
-            result: null
-          }
+    spyHttpClientGetJson.mockImplementation(
+      async (): Promise<ifm.TypedResponse<WmMappingsResponseBody>> => {
+        return {
+          statusCode: statusCode,
+          headers: {},
+          result: null
         }
-      )
+      }
+    )
 
-      const wiremockAdmin = new WiremockAdmin('localhost', 8080)
-      await expect(wiremockAdmin.getMappings()).rejects.toThrow(
-        `Failed to get mappings: ${statusCode}`
-      )
-      expect(spyHttpClientGetJson).toHaveBeenCalledWith(
-        'http://localhost:8080/__admin/mappings',
-        {}
-      )
-    }
-  )
+    const wiremockAdmin = new WiremockAdmin('localhost', 8080)
+    await expect(wiremockAdmin.getMappings()).rejects.toThrow(
+      `Failed to get mappings: ${statusCode}`
+    )
+    expect(spyHttpClientGetJson).toHaveBeenCalledWith('http://localhost:8080/__admin/mappings', {})
+  })
 })
