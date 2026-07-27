@@ -1,75 +1,60 @@
-# Create a GitHub Action Using TypeScript
+# Setup Wiremock Stubs Action
 
-![Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)
-![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)
+Posts Wiremock stubs to a Wiremock server running in a container. This action is
+intended to be used in conjunction with wiremock running as a GH service
+
+```yaml
+jobs:
+  run-tests:
+    name: Integration Tests (using Wiremock)
+    runs-on: ubuntu-latest
+
+    services:
+      wiremock:
+        image: wiremock/wiremock:latest-alpine
+        ports: [8080]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Wiremock Stubs
+        id: setup-stubs
+        uses: singingbush/setup-wiremock-stubs-action@0.1
+        with:
+          port: ${{ job.services.wiremock.ports['8080'] }}
+          mappings: ${{ github.workspace }}/wiremock/mappings
+
+      - name: Run Tests
+        run: ...
+```
+
+![Linter](https://github.com/singingbush/setup-wiremock-stubs-action/actions/workflows/linter.yml/badge.svg)
+![CI](https://github.com/singingbush/setup-wiremock-stubs-action/actions/workflows/ci.yml/badge.svg)
+![Check dist/](https://github.com/singingbush/setup-wiremock-stubs-action/actions/workflows/check-dist.yml/badge.svg)
+![CodeQL](https://github.com/singingbush/setup-wiremock-stubs-action/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Coverage](./badges/coverage.svg)
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+## Local development
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+Clone the repository and run the following:
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
-
-## Create Your Own Action
-
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
-
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
-
-> [!IMPORTANT]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
-
-## Initial Setup
-
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can develop your action.
-
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Node.js](https://nodejs.org) handy (20.x or later should work!). If you are
-> using a version manager like [`nodenv`](https://github.com/nodenv/nodenv) or
-> [`fnm`](https://github.com/Schniz/fnm), this template has a `.node-version`
-> file at the root of the repository that can be used to automatically switch to
-> the correct version when you `cd` into the repository. Additionally, this
-> `.node-version` file is used by GitHub Actions in any `actions/setup-node`
-> actions.
-
-1. :hammer_and_wrench: Install the dependencies
+1. Install the dependencies
 
    ```bash
    npm install
    ```
 
-1. :building_construction: Package the TypeScript for distribution
+1. Package the TypeScript for distribution (changes to dist must be committed)
 
    ```bash
    npm run bundle
    ```
 
-1. :white_check_mark: Run the tests
+1. Run the tests
 
    ```bash
-   $ npm test
-
-   PASS  ./index.test.js
-     ✓ throws invalid number (3ms)
-     ✓ wait 500 ms (504ms)
-     ✓ test runs (95ms)
-
-   ...
+   npm test
    ```
 
 ## Update the Action Metadata
