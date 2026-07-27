@@ -17,6 +17,6 @@ indent_size = 2
 insert_final_newline = true
 
 [*.md]
-# Ensure values are aligned with .markdown-lint.yml
-max_line_length = 120
+# Ensure values are aligned with (or higher than) .markdown-lint.yml
+max_line_length = 140
 trim_trailing_whitespace = false
