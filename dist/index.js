@@ -29242,7 +29242,8 @@ async function run() {
             .getMappings()
             .then((mappings) => {
             info(`Retrieved ${mappings.length} mappings from Wiremock admin endpoint.`);
-            setOutput('count', mappings.length);
+            setOutput('mappings', mappings);
+            setOutput('total', mappings.length);
         })
             .catch((error) => {
             setFailed(`Failed to retrieve mappings: ${error.message}`);
