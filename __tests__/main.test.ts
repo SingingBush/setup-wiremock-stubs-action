@@ -46,7 +46,7 @@ describe('main.ts', () => {
     const mockGetMappings = jest
       .fn()
       .mockReturnValueOnce(Promise.resolve([] as WmMapping[]))
-      .mockReturnValueOnce(Promise.resolve([{id: 'one'}, {id: 'two'}] as WmMapping[]))
+      .mockReturnValueOnce(Promise.resolve([{ id: 'one' }, { id: 'two' }] as WmMapping[]))
 
     const mockPostMappings = jest.fn(() => Promise.resolve())
 
@@ -64,7 +64,7 @@ describe('main.ts', () => {
     expect(mockPostMappings).toHaveBeenCalledTimes(2)
 
     expect(core.setOutput).toHaveBeenCalledTimes(2)
-    expect(core.setOutput).toHaveBeenCalledWith('mappings', [{id: 'one'}, {id: 'two'}])
+    expect(core.setOutput).toHaveBeenCalledWith('mappings', [{ id: 'one' }, { id: 'two' }])
     expect(core.setOutput).toHaveBeenCalledWith('total', 2)
   })
 

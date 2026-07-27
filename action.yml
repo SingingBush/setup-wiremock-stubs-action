@@ -1,9 +1,7 @@
 name: Setup Wiremock Stubs
 
 # description must be less than 125 characters
-description:
-  Post Wiremock stubs to an already running Wiremock container running as a GH
-  service
+description: Post Wiremock stubs to an already running Wiremock container running as a GH service
 author: singingbush
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.

@@ -29224,9 +29224,7 @@ async function run() {
                 warning(`Skipping directory ${file.name} in mappings path as recursively reading directories is not supported.`);
             }
             else if (path.extname(file.name) === '.json') {
-                const content = fs__default
-                    .readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8')
-                    .trim();
+                const content = fs__default.readFileSync(path.join(wiremock_mappings_dir, file.name), 'utf8').trim();
                 info(`Posting ${path.join(wiremock_mappings_dir, file.name)} to Wiremock.`);
                 wiremockAdmin
                     .postMappings(JSON.parse(content))
