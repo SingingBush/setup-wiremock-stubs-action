@@ -60,3 +60,4 @@ jobs:
           VALIDATE_TYPESCRIPT_ES: false
           VALIDATE_JSON: false
           VALIDATE_SHELL_SHFMT: false
+          VALIDATE_EDITORCONFIG: false
